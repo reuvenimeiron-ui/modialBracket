@@ -1,0 +1,233 @@
+Tournament Bracket Web App — Implementation Plan
+=================================================
+
+SOURCE OF TRUTH:
+C:\Users\meiron.reuveni\.copilot\agents\modial bracket agent.agent.md
+
+WORKSPACE:
+c:\Users\meiron.reuveni\OneDrive - RADCOM Ltd\Documents\mondial bracket
+
+TECH STACK:
+- Vite + React + TypeScript
+- Zustand (state only)
+- No backend, no routing, no persistence (MVP)
+
+==================================================
+PHASE STATUS
+==================================================
+[ ] Phase 1  — Project Scaffold
+[ ] Phase 2  — Data Models & Types
+[ ] Phase 3  — Scoring Engine
+[ ] Phase 4  — State Management (Zustand)
+[ ] Phase 5  — Base UI Components
+[ ] Phase 6  — Auth Modals
+[ ] Phase 7  — Bracket UI
+[ ] Phase 8  — Match Modals
+[ ] Phase 9  — Leaderboard & Scoring Rules
+[ ] Phase 10 — Match Auto-Lock
+[ ] Phase 11 — Seed Data & Integration
+[ ] Phase 12 — Verification
+
+
+
+
+=================================================
+PHASE VERIFICATION CONTRACT (ENFORCED)
+==================================================
+
+After EACH phase, execution MUST stop and the agent MUST:
+
+- Perform a self-verification against that phase’s tasks.
+- Output a PASS / FAIL status per task.
+- Confirm no work from future phases was started.
+- Wait for explicit approval before proceeding.
+
+Progress without verification is NOT allowed.
+
+
+
+==================================================
+PHASE 1 — PROJECT SCAFFOLD
+==================================================
+1. npm create vite@latest . -- --template react-ts  (in workspace root)
+2. npm install zustand
+3. Create folder structure:
+   src/components/Bracket/
+   src/components/Modals/
+   src/components/Users/
+   src/components/Scoring/
+   src/components/State/
+   src/components/UI/
+   src/seedData.ts  (placeholder)
+   src/App.tsx      (default, wired in Phase 11)
+4. Leave vite.config.ts and tsconfig.json untouched
+
+==================================================
+PHASE 2 — DATA MODELS & TYPES
+==================================================
+Files: src/components/Scoring/scoringRules.types.ts + shared types
+
+Interfaces:
+- User          { id, displayName, email, totalPoints, predictionHistory }
+- Tournament    { id, name, participants[], matches[], scoringRules, status }
+- Match         { id, round, teamA, teamB, startTime, locked, result? }
+- MatchResult   { finalScore, winner, leadingScorer }
+- Prediction    { userId, matchId, predictedWinner, predictedScore,
+                  predictedLeadingScorer, timestamp }
+- ScoringRule   { ruleKey, points, enabled }
+
+Allowed ruleKey values (STRICT):
+  correct_winner | exact_score | goal_difference | leading_scorer
+
+==================================================
+PHASE 3 — SCORING ENGINE
+==================================================
+File: src/components/Scoring/scoringEngine.ts
+
+- Pure function: (result, prediction, rules[]) => { totalPoints, breakdown }
+- Apply rule only if enabled
+- Rules stack (all enabled rules accumulate)
+- No UI logic, no state mutation
+
+==================================================
+PHASE 4 — STATE MANAGEMENT (ZUSTAND)
+==================================================
+File: src/components/State/tournamentStore.ts
+
+State:
+  users[], currentUser, tournament, predictions[]
+
+Actions:
+  registerUser, loginUser, logoutUser,
+  setPrediction, submitResult, lockMatch
+
+Rules:
+  - One prediction per (userId, matchId); setPrediction overwrites
+  - submitResult: stores result, calls scoring engine, updates user.totalPoints
+  - Leaderboard is DERIVED ONLY — never stored in state
+
+==================================================
+PHASE 5 — BASE UI COMPONENTS
+==================================================
+- src/components/UI/Modal.tsx
+    Dimmed overlay, close on ESC / X / outside click, one modal at a time
+- src/components/UI/Button.tsx
+- src/components/UI/Table.tsx
+
+==================================================
+PHASE 6 — AUTH MODALS
+==================================================
+- src/components/Users/RegisterModal.tsx  (email, password, displayName)
+- src/components/Users/LoginModal.tsx     (email, password)
+Client-only auth for MVP.
+
+==================================================
+PHASE 7 — BRACKET UI
+==================================================
+- src/components/Bracket/MatchCard.tsx
+    Displays teams, highlights winner, opens modal on click
+- src/components/Bracket/Round.tsx
+    Vertical list of MatchCard components
+- src/components/Bracket/Bracket.tsx
+    Horizontal rounds, always visible, seeded single-elimination
+    Participant count must be a power of 2 (8 / 16 / 32)
+
+==================================================
+PHASE 8 — MATCH MODALS
+==================================================
+- src/components/Modals/MatchPredictionModal.tsx
+    Inputs: predicted winner, predicted score, predicted leading scorer
+    Disabled when match.locked === true
+    Save calls setPrediction and closes modal
+
+- src/components/Modals/MatchResultModal.tsx
+    Enter final score, winner, leading scorer
+    Submit calls submitResult → triggers scoring + leaderboard update
+    No role enforcement (MVP)
+
+==================================================
+PHASE 9 — LEADERBOARD & SCORING RULES
+==================================================
+Leaderboard selector sorting priority:
+  1. totalPoints
+  2. exact score hits
+  3. leading scorer hits
+  4. earliest prediction timestamp
+
+- src/components/Modals/LeaderboardModal.tsx    (read-only table)
+- src/components/Modals/ScoringRulesModal.tsx   (read-only rules display)
+
+==================================================
+PHASE 10 — MATCH AUTO-LOCK
+==================================================
+- Lock logic lives in the store (lockMatch action)
+- UI triggers check via useEffect interval or per-render
+- Condition: if currentTime >= match.startTime → lockMatch(matchId)
+
+==================================================
+PHASE 11 — SEED DATA & INTEGRATION
+==================================================
+- src/seedData.ts
+    One 8-team tournament, default scoring rules, two test users
+
+- Wire all modals into App.tsx / Bracket.tsx
+    Click MatchCard → open MatchPredictionModal (or MatchResultModal)
+
+- Persistent header:
+    Logged-in user display | Login | Register | Logout
+    Open Leaderboard | Open Scoring Rules
+
+==================================================
+PHASE 12 — VERIFICATION (Definition of Done)
+==================================================
+Manual checklist:
+  [ ] Register and log in as a user
+  [ ] Submit and edit prediction before lock time
+  [ ] Lock triggers at match.startTime
+  [ ] Submit result → correct points awarded
+  [ ] Leaderboard sorted correctly and updates automatically
+  [ ] No crashes on modal open/close cycles
+
+Scoring engine smoke tests:
+  [ ] Correct winner only
+  [ ] Exact score
+  [ ] Correct leading scorer
+
+==================================================
+FILE STRUCTURE (STRICT)
+==================================================
+src/
+  components/
+    Bracket/
+      Bracket.tsx
+      Round.tsx
+      MatchCard.tsx
+    Modals/
+      MatchPredictionModal.tsx
+      MatchResultModal.tsx
+      LeaderboardModal.tsx
+      ScoringRulesModal.tsx
+    Users/
+      LoginModal.tsx
+      RegisterModal.tsx
+    Scoring/
+      scoringEngine.ts
+      scoringRules.types.ts
+    State/
+      tournamentStore.ts
+    UI/
+      Modal.tsx
+      Button.tsx
+      Table.tsx
+  seedData.ts
+  App.tsx
+
+==================================================
+EXPLICITLY OUT OF SCOPE
+==================================================
+- Backend or API
+- Multi-tournament navigation
+- Admin roles
+- Mobile optimization
+- Automated tests
+- Persistence across refresh (localStorage deferred)
