@@ -1,0 +1,159 @@
+/* ============================================================
+   Bracket, Round, and MatchCard styles
+   ============================================================ */
+
+/* --- Bracket container ---------------------------------------- */
+
+.bracket {
+  padding: 24px 16px;
+  overflow-x: auto;
+}
+
+.bracket__title {
+  margin: 0 0 20px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #e0e0f0;
+  text-align: center;
+}
+
+.bracket__rounds {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 32px;
+  min-width: max-content;
+}
+
+.bracket--empty {
+  text-align: center;
+  color: #6060a0;
+  padding: 60px 16px;
+}
+
+/* --- Round column --------------------------------------------- */
+
+.round {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  min-width: 160px;
+}
+
+.round__label {
+  margin: 0 0 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #7070b0;
+}
+
+.round__matches {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+/* --- Match card ----------------------------------------------- */
+
+.match-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: 100%;
+  background: #1e1e2e;
+  border: 1px solid #3a3a5c;
+  border-radius: 8px;
+  padding: 10px 12px;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.15s, background 0.15s;
+  font-size: 0.875rem;
+  color: #d0d0f0;
+}
+
+.match-card:hover {
+  border-color: #5865f2;
+  background: #232337;
+}
+
+.match-card--locked {
+  border-color: #4a3a3a;
+  cursor: default;
+}
+
+.match-card--locked:hover {
+  border-color: #5a4a4a;
+  background: #1e1e2e;
+}
+
+.match-card--finished {
+  border-color: #2a4a2a;
+}
+
+.match-card--finished:hover {
+  border-color: #3a6a3a;
+}
+
+/* Lock badge */
+.match-card__lock {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  font-size: 0.7rem;
+  opacity: 0.7;
+}
+
+/* Team row */
+.match-card__team {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 3px 0;
+  gap: 8px;
+}
+
+.match-card__team-name {
+  font-weight: 500;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.match-card__score {
+  font-weight: 700;
+  font-size: 1rem;
+  color: #e0e0f0;
+  min-width: 18px;
+  text-align: right;
+}
+
+.match-card__team--winner .match-card__team-name {
+  color: #6ee76e;
+  font-weight: 700;
+}
+
+.match-card__team--winner .match-card__score {
+  color: #6ee76e;
+}
+
+/* Divider */
+.match-card__divider {
+  font-size: 0.7rem;
+  color: #5a5a8a;
+  text-align: center;
+  padding: 2px 0;
+}
+
+/* Prediction indicator */
+.match-card__predicted {
+  margin-top: 6px;
+  font-size: 0.75rem;
+  color: #5865f2;
+  font-weight: 600;
+}

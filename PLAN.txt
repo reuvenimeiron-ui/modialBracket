@@ -16,13 +16,13 @@ TECH STACK:
 PHASE STATUS
 ==================================================
 [ ] Phase 1  — Project Scaffold
-[ ] Phase 2  — Data Models & Types
-[ ] Phase 3  — Scoring Engine
-[ ] Phase 4  — State Management (Zustand)
-[ ] Phase 5  — Base UI Components
-[ ] Phase 6  — Auth Modals
-[ ] Phase 7  — Bracket UI
-[ ] Phase 8  — Match Modals
+[x] Phase 2  — Data Models & Types
+[x] Phase 3  — Scoring Engine
+[x] Phase 4  — State Management (Zustand)
+[x] Phase 5  — Base UI Components
+[x] Phase 6  — Auth Modals
+[x] Phase 7  — Bracket UI
+[x] Phase 8  — Match Modals
 [ ] Phase 9  — Leaderboard & Scoring Rules
 [ ] Phase 10 — Match Auto-Lock
 [ ] Phase 11 — Seed Data & Integration

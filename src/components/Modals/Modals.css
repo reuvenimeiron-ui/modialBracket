@@ -1,0 +1,131 @@
+/* Shared styles for match modals */
+
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.modal-fieldset {
+  border: 1px solid #3a3a5c;
+  border-radius: 6px;
+  padding: 12px 14px;
+  margin: 0;
+}
+
+.modal-fieldset:disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.modal-legend {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #8080b8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0 4px;
+}
+
+/* Radio group */
+.modal-radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.modal-radio-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: #d0d0f0;
+  cursor: pointer;
+}
+
+.modal-radio-label input[type='radio'] {
+  accent-color: #5865f2;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+/* Score row */
+.modal-score-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.modal-score-team {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #c0c0e0;
+  min-width: 60px;
+}
+
+.modal-score-input {
+  width: 56px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid #3a3a5c;
+  background: #13131f;
+  color: #e0e0f0;
+  font-size: 1rem;
+  font-weight: 700;
+  text-align: center;
+  outline: none;
+}
+
+.modal-score-input:focus {
+  border-color: #5865f2;
+}
+
+.modal-score-sep {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #5a5a8a;
+}
+
+/* Text input */
+.modal-text-input {
+  width: 100%;
+  margin-top: 8px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #3a3a5c;
+  background: #13131f;
+  color: #e0e0f0;
+  font-size: 0.9rem;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.modal-text-input:focus {
+  border-color: #5865f2;
+}
+
+/* Info / error messages */
+.modal-info {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #8080b0;
+  font-style: italic;
+}
+
+.modal-error {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #e05555;
+}
+
+/* Action row */
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 4px;
+}

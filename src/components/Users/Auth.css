@@ -1,0 +1,44 @@
+/* Shared styles for auth modals (Register + Login) */
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.auth-label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #a0a0c8;
+}
+
+.auth-input {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #3a3a5c;
+  background: #13131f;
+  color: #e0e0f0;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.auth-input:focus {
+  border-color: #5865f2;
+}
+
+.auth-error {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #e05555;
+}
+
+.auth-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 4px;
+}
