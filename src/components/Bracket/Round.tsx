@@ -3,7 +3,7 @@
 // ============================================================
 
 import type { Match } from '../../types';
-import { MatchCard } from './MatchCard';
+import { MatchSlot } from './MatchCard';
 import './Bracket.css';
 
 interface RoundProps {
@@ -23,7 +23,7 @@ export function Round({ roundNumber, roundLabel, matches, onOpenPrediction, onOp
       <h3 className="round__label">{roundLabel}</h3>
       <div className="round__matches">
         {matches.map(match => (
-          <MatchCard
+          <MatchSlot
             key={match.id}
             match={match}
             onOpenPrediction={onOpenPrediction}

@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 78" shape-rendering="crispEdges">
+  <!-- Orange fat retro biplane — faces RIGHT, tail on right -->
+
+  <!-- Top wing -->
+  <rect x="24" y="4"  width="60" height="8"  fill="#F5C142"/>
+  <rect x="20" y="6"  width="4"  height="4"  fill="#F5C142"/>
+  <rect x="84" y="6"  width="4"  height="4"  fill="#F5C142"/>
+
+  <!-- Wing-to-body struts -->
+  <rect x="32" y="12" width="4" height="10" fill="#C8721A"/>
+  <rect x="68" y="12" width="4" height="10" fill="#C8721A"/>
+
+  <!-- Fuselage — fat / rounded via stacked rects -->
+  <rect x="12" y="18" width="82" height="32" fill="#F4893A"/>
+  <rect x="16" y="14" width="78" height="40" fill="#F4893A"/>
+  <rect x="20" y="10" width="70" height="48" fill="#F4893A"/>
+  <!-- Nose section -->
+  <rect x="6"  y="24" width="14" height="20" fill="#F4893A"/>
+  <rect x="2"  y="28" width="6"  height="12" fill="#F4893A"/>
+  <!-- Nose shading -->
+  <rect x="6"  y="24" width="6"  height="20" fill="#C8721A"/>
+
+  <!-- Cockpit window -->
+  <rect x="34" y="16" width="28" height="14" fill="#87CEEB"/>
+  <rect x="36" y="18" width="24" height="10" fill="#C0E8FF"/>
+  <rect x="34" y="16" width="28" height="3"  fill="#2A6BA8"/>
+
+  <!-- Tail vertical fin -->
+  <rect x="90" y="8"  width="14" height="24" fill="#F4893A"/>
+  <rect x="96" y="4"  width="8"  height="14" fill="#C8721A"/>
+
+  <!-- Bottom wing + struts -->
+  <rect x="32" y="56" width="4" height="10" fill="#C8721A"/>
+  <rect x="68" y="56" width="4" height="10" fill="#C8721A"/>
+  <rect x="24" y="62" width="60" height="8"  fill="#F5C142"/>
+
+  <!-- Tail horizontal fin -->
+  <rect x="90" y="58" width="24" height="8"  fill="#F5C142"/>
+
+  <!-- Propeller hub -->
+  <rect x="0"  y="28" width="6"  height="12" fill="#4A4A4A"/>
+  <!-- Propeller blades -->
+  <rect x="1"  y="10" width="4"  height="20" fill="#4B8FD8"/>
+  <rect x="1"  y="38" width="4"  height="20" fill="#4B8FD8"/>
+
+  <!-- Wheels + struts -->
+  <rect x="36" y="70" width="3"  height="8"  fill="#777"/>
+  <rect x="64" y="70" width="3"  height="8"  fill="#777"/>
+  <rect x="28" y="70" width="16" height="8"  fill="#1A1A1A"/>
+  <rect x="56" y="70" width="16" height="8"  fill="#1A1A1A"/>
+  <rect x="30" y="68" width="12" height="4"  fill="#333"/>
+  <rect x="58" y="68" width="12" height="4"  fill="#333"/>
+
+  <!-- Belly shading -->
+  <rect x="16" y="52" width="72" height="4"  fill="#C8721A"/>
+</svg>

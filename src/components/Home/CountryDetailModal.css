@@ -1,0 +1,258 @@
+/* CountryDetailModal styles */
+
+.cdm {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Hero row: big flag + name */
+.cdm__hero {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.cdm__flag {
+  border-radius: 6px !important;
+  box-shadow: var(--shadow-md);
+}
+
+.cdm__hero-text {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cdm__name {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.cdm__conf {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  background: var(--accent-light);
+  padding: 3px 10px;
+  border-radius: 20px;
+  border: 1px solid rgba(37, 99, 235, 0.2);
+}
+
+/* Profile / Squad tab switcher */
+.cdm__tabs {
+  display: flex;
+  gap: 4px;
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 4px;
+}
+
+.cdm__tab {
+  flex: 1;
+  padding: 7px 12px;
+  border: none;
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s, color 0.15s;
+}
+
+.cdm__tab:hover {
+  background: var(--surface);
+  color: var(--text);
+}
+
+.cdm__tab--active {
+  background: var(--surface);
+  color: var(--accent);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Rankings side-by-side */
+.cdm__ranks {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.cdm__rank-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 18px 16px;
+}
+
+.cdm__rank-divider {
+  width: 1px;
+  background: var(--border);
+}
+
+.cdm__rank-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-muted);
+}
+
+.cdm__rank-value {
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.cdm__rank-badge {
+  font-size: 1.4rem;
+}
+
+.cdm__rank-of {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-light);
+}
+
+/* Offensive / Defensive rating bars */
+.cdm__ratings {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 16px 18px;
+}
+
+.cdm__rating-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cdm__rating-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  width: 90px;
+  flex-shrink: 0;
+}
+
+.cdm__rating-bar-wrap {
+  flex: 1;
+  height: 10px;
+  background: var(--border);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.cdm__rating-bar {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 0.4s ease;
+}
+
+.cdm__rating-bar--attack {
+  background: linear-gradient(90deg, #f97316, #ef4444);
+}
+
+.cdm__rating-bar--defense {
+  background: linear-gradient(90deg, #2563eb, #7c3aed);
+}
+
+.cdm__rating-score {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--text);
+  width: 28px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* Bio text */
+.cdm__bio {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--text-muted);
+  margin: 0;
+  padding: 16px;
+  background: var(--surface-alt);
+  border-radius: var(--radius);
+  border-left: 3px solid var(--accent);
+}
+
+.cdm__no-data {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  font-style: italic;
+  text-align: center;
+  padding: 20px 0;
+}
+
+/* Squad tab */
+.cdm__squad {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cdm__squad-note {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.cdm__squad-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+
+.cdm__squad-player {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 7px 10px;
+}
+
+.cdm__squad-num {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: var(--accent);
+  min-width: 18px;
+  text-align: center;
+}
+
+.cdm__squad-name {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

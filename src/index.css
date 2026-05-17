@@ -1,111 +1,89 @@
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+  /* ── Color tokens — RADCOM Brand Palette (March 2026) ────────────── */
+  --bg:           #080d1a;
+  --surface:      #0f1829;
+  --surface-alt:  #152035;
+  --border:       rgba(255,255,255,0.10);
+  --border-focus: #36B2C6;              /* RADCOM Teal — PANTONE 631C */
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
+  --text:         #e8edf5;
+  --text-muted:   #B4B4B5;              /* RADCOM Gray — PANTONE 421C */
+  --text-light:   #4a6080;
 
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
+  /* RADCOM Primary — Teal #36B2C6 */
+  --accent:       #36B2C6;              /* RADCOM Teal — PANTONE 631C */
+  --accent-hover: #91D7EB;              /* RADCOM Light Blue — PANTONE 2975C */
+  --accent-light: rgba(54,178,198,0.12);
+
+  /* RADCOM Functional — Positive (green) */
+  --green:        #36b98e;              /* RADCOM Functional Positive */
+  --green-light:  rgba(54,185,142,0.12);
+
+  /* RADCOM Functional — Negative (red-orange) */
+  --red:          #d95f2a;              /* RADCOM Functional Negative */
+  --red-light:    rgba(217,95,42,0.12);
+
+  /* RADCOM Functional — Warning (amber) */
+  --amber:        #e9a123;              /* RADCOM Functional Warning */
+  --amber-light:  rgba(233,161,35,0.12);
+
+  /* RADCOM Secondary — Purple, used for champions, highlights */
+  --gold:         #BF76B1;              /* RADCOM Light Purple — PANTONE 2351C */
+  --gold-glow:    rgba(191,118,177,0.35);
+
+  /* RADCOM Teal glow helper */
+  --neon:         #36B2C6;              /* RADCOM Teal */
+  --neon-glow:    rgba(54,178,198,0.25);
+
+  /* RADCOM Additional — Deep Purple */
+  --purple:       #872D91;              /* RADCOM Purple — PANTONE 2593C */
+  --purple-light: rgba(135,45,145,0.15);
+
+  --shadow-sm:    0 1px 4px rgba(0,0,0,.5), 0 1px 2px rgba(0,0,0,.4);
+  --shadow-md:    0 4px 16px rgba(0,0,0,.6), 0 2px 8px rgba(0,0,0,.4);
+  --shadow-lg:    0 10px 40px rgba(0,0,0,.7), 0 4px 16px rgba(0,0,0,.5);
+
+  --radius-sm:    6px;
+  --radius:       8px;
+  --radius-lg:    12px;
+  --radius-xl:    16px;
+
+  --sans:    'Roboto', 'Segoe UI', system-ui, sans-serif;      /* RADCOM brand body font */
+  --heading: 'Montserrat', 'Arial', Impact, sans-serif;         /* RADCOM brand title font */
+
+  font: 16px/1.5 var(--sans);
   color: var(--text);
   background: var(--bg);
+  color-scheme: dark;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
-
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
 }
 
 #root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
+  width: 100%;
   min-height: 100svh;
   display: flex;
   flex-direction: column;
-  box-sizing: border-box;
 }
 
 body {
   margin: 0;
+  background: var(--bg);
 }
 
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
+*, *::before, *::after {
+  box-sizing: border-box;
 }
 
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
-}
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
-}
-p {
+h1, h2, h3 {
   margin: 0;
+  font-family: var(--heading);
+  font-weight: 700; /* Montserrat Bold — RADCOM brand heading weight */
+  color: var(--text);
+  line-height: 1.1;
+  letter-spacing: 0.04em;
 }
 
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
-}
-
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
-}
+p { margin: 0; }
+button { font-family: inherit; }

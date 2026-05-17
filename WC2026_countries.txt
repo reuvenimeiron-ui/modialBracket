@@ -1,0 +1,68 @@
+FIFA World Cup 2026 — 48 Competing Nations
+==========================================
+
+CONMEBOL (6)
+------------
+Argentina
+Brazil
+Colombia
+Ecuador
+Paraguay
+Uruguay
+
+UEFA (16)
+---------
+Austria
+Belgium
+Bosnia and Herzegovina
+Croatia
+Czech Republic
+England
+France
+Germany
+Netherlands
+Norway
+Portugal
+Scotland
+Spain
+Sweden
+Switzerland
+Türkiye
+
+CONCACAF (6)
+------------
+Canada
+Curaçao
+Haiti
+Mexico
+Panama
+United States
+
+AFC (9)
+-------
+Australia
+Iran
+Iraq
+Japan
+Jordan
+Qatar
+Saudi Arabia
+South Korea
+Uzbekistan
+
+CAF (10)
+--------
+Algeria
+Cape Verde
+DR Congo
+Egypt
+Ghana
+Ivory Coast
+Morocco
+Senegal
+South Africa
+Tunisia
+
+OFC (1)
+-------
+New Zealand

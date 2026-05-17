@@ -31,6 +31,7 @@ export function MatchResultModal({ matchId, onClose }: MatchResultModalProps) {
   const [winner, setWinner] = useState(existing?.winner ?? '');
   const [leadingScorer, setLeadingScorer] = useState(existing?.leadingScorer ?? '');
   const [error, setError] = useState('');
+  const [flash, setFlash] = useState(false);
 
   if (!match) return null;
 
@@ -54,12 +55,13 @@ export function MatchResultModal({ matchId, onClose }: MatchResultModalProps) {
     };
 
     submitResult(matchId, result);
-    onClose();
+    setFlash(true);
+    setTimeout(onClose, 800);
   }
 
   return (
     <Modal title={`Result: ${match.teamA} vs ${match.teamB}`} onClose={onClose}>
-      <form className="modal-form" onSubmit={handleSubmit}>
+      <form className={`modal-form${flash ? ' form--result-flash' : ''}`} onSubmit={handleSubmit}>
 
         {/* Score */}
         <fieldset className="modal-fieldset">

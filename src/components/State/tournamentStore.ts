@@ -10,6 +10,7 @@
 import { create } from 'zustand';
 import type { User, Tournament, Match, MatchResult, Prediction } from '../../types';
 import { calculatePoints } from '../Scoring/scoringEngine';
+import { pushDebugLog } from '../Users/debugLog';
 
 // ---- Leaderboard row (derived, never stored) --------------------------------
 
@@ -50,6 +51,19 @@ interface TournamentState {
 
   // Leaderboard selector (derived)
   getLeaderboard: () => LeaderboardEntry[];
+
+  // Admin mode (client-only MVP — no real security boundary)
+  isAdmin: boolean;
+  setAdminMode: (password: string) => boolean;
+  exitAdminMode: () => void;
+
+  // Debug-only actions (admin panel)
+  debugUnlockMatch: (matchId: string) => void;
+  debugSwitchUser: (userId: string) => void;
+
+  // Debug UI flags
+  debugLegacyPlanes: boolean;
+  setDebugLegacyPlanes: (v: boolean) => void;
 }
 
 // ---- Simple in-memory password store (MVP only — no real auth) --------------
@@ -83,21 +97,28 @@ export const useTournamentStore = create<TournamentState>((set, get) => ({
 
     _passwordMap.set(email, password);
     set(state => ({ users: [...state.users, newUser], currentUser: newUser }));
+    pushDebugLog('register', `Registered "${displayName}"`, email);
   },
 
   loginUser(email, password) {
     const storedPassword = _passwordMap.get(email);
-    if (storedPassword !== password) return false;
+    if (storedPassword !== password) {
+      pushDebugLog('error', `Login failed for ${email}`);
+      return false;
+    }
 
     const user = get().users.find(u => u.email === email);
     if (!user) return false;
 
     set({ currentUser: user });
+    pushDebugLog('login', `Logged in as "${user.displayName}"`, email);
     return true;
   },
 
   logoutUser() {
+    const name = get().currentUser?.displayName ?? '?';
     set({ currentUser: null });
+    pushDebugLog('logout', `"${name}" logged out`);
   },
 
   // ---------- Predictions ----------------------------------------------------
@@ -110,6 +131,14 @@ export const useTournamentStore = create<TournamentState>((set, get) => ({
       );
       return { predictions: [...filtered, prediction] };
     });
+    const match = get().tournament?.matches.find(m => m.id === prediction.matchId);
+    const user  = get().users.find(u => u.id === prediction.userId);
+    const label = match ? `${match.teamA} vs ${match.teamB}` : prediction.matchId;
+    pushDebugLog(
+      'prediction',
+      `"${user?.displayName ?? prediction.userId}" predicted ${label}`,
+      `winner=${prediction.predictedWinner} score=${prediction.predictedScore.teamA}-${prediction.predictedScore.teamB} scorer=${prediction.predictedLeadingScorer}`,
+    );
   },
 
   // ---------- Results --------------------------------------------------------
@@ -149,6 +178,14 @@ export const useTournamentStore = create<TournamentState>((set, get) => ({
       : null;
 
     set({ tournament: updatedTournament, users: updatedUsers, currentUser: newCurrentUser });
+
+    const match = tournament.matches.find(m => m.id === matchId);
+    const label = match ? `${match.teamA} vs ${match.teamB}` : matchId;
+    pushDebugLog(
+      'result',
+      `Result submitted: ${label}`,
+      `${result.finalScore.teamA}-${result.finalScore.teamB} winner=${result.winner} ★${result.leadingScorer} | ${matchPredictions.length} predictions scored`,
+    );
   },
 
   // ---------- Lock -----------------------------------------------------------
@@ -161,6 +198,8 @@ export const useTournamentStore = create<TournamentState>((set, get) => ({
       m.id === matchId ? { ...m, locked: true } : m,
     );
     set({ tournament: { ...tournament, matches: updatedMatches } });
+    const match = tournament.matches.find(m => m.id === matchId);
+    pushDebugLog('lock', `Match locked: ${match?.teamA ?? '?'} vs ${match?.teamB ?? '?'}`);
   },
 
   // ---------- Tournament initialiser ----------------------------------------
@@ -224,4 +263,46 @@ export const useTournamentStore = create<TournamentState>((set, get) => ({
       return tA - tB;
     });
   },
+
+  // ---------- Admin mode (client-only MVP) -----------------------------------
+  // Not a real security boundary — this is a single-page app with no backend.
+  // The password simply prevents accidental result submissions.
+
+  isAdmin: false,
+
+  setAdminMode(password) {
+    if (password === 'admin2026') {
+      set({ isAdmin: true });
+      return true;
+    }
+    return false;
+  },
+
+  exitAdminMode() {
+    set({ isAdmin: false });
+  },
+
+  // ---------- Debug-only actions --------------------------------------------
+
+  debugUnlockMatch(matchId) {
+    const { tournament } = get();
+    if (!tournament) return;
+    const updatedMatches = tournament.matches.map((m: Match) =>
+      m.id === matchId ? { ...m, locked: false } : m,
+    );
+    set({ tournament: { ...tournament, matches: updatedMatches } });
+    const match = tournament.matches.find(m => m.id === matchId);
+    pushDebugLog('info', `[DEBUG] Unlocked: ${match?.teamA ?? '?'} vs ${match?.teamB ?? '?'}`);
+  },
+
+  debugSwitchUser(userId) {
+    const user = get().users.find(u => u.id === userId);
+    if (!user) return;
+    const prev = get().currentUser?.displayName ?? 'nobody';
+    set({ currentUser: user });
+    pushDebugLog('info', `[DEBUG] Impersonating "${user.displayName}" (was "${prev}")`);
+  },
+
+  debugLegacyPlanes: false,
+  setDebugLegacyPlanes(v) { set({ debugLegacyPlanes: v }); },
 }));

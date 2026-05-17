@@ -35,6 +35,8 @@ export interface Match {
   startTime: Date;
   locked: boolean;
   result?: MatchResult;
+  /** true for the 3rd-place play-off match (shown separately from the main bracket) */
+  isThirdPlace?: boolean;
 }
 
 // ----- Match Result -----

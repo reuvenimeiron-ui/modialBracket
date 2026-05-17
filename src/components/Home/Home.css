@@ -1,0 +1,579 @@
+/* Home landing page — stadium grass background, no hero section */
+
+.home {
+  display: flex;
+  flex-direction: column;
+  align-items: center;          /* symmetric horizontal centering */
+  min-height: calc(100vh - 60px);
+  /* Same layer stack as the bracket page for visual consistency:
+     1. Pitch stripes
+     2. Dark readability overlay
+     3. Grass close-up photo */
+  background-color: var(--bg);
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      rgba(10, 45, 15, 0.09) 0px,
+      rgba(10, 45, 15, 0.09) 56px,
+      rgba(5,  22,  8, 0.05) 56px,
+      rgba(5,  22,  8, 0.05) 112px
+    ),
+    linear-gradient(rgba(4, 9, 20, 0.72), rgba(4, 9, 20, 0.72)),
+    url('/grass%20soccer%20field%20close%20up.webp');
+  background-size:
+    auto,
+    auto,
+    cover;
+  background-position:
+    0 0,
+    0 0,
+    center center;
+  background-repeat:
+    repeat,
+    no-repeat,
+    no-repeat;
+  background-attachment:
+    scroll,
+    fixed,
+    fixed;
+  position: relative;
+  z-index: 0;
+}
+
+/* Ensure all direct content sits above the planes layer */
+.home > *:not(.home__planes) {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+}
+
+/* Ensure all direct content sits above the planes layer */
+.home > *:not(.home__planes) {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Airplane layer ─────────────────────────────────────────── */
+
+.home__planes {
+  position: fixed;
+  inset: 60px 0 0 0;   /* below the sticky header */
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.home__plane {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+  /* start off-screen, hidden until animation begins */
+  opacity: 0;
+}
+
+/* Left-to-right: starts off screen left, ends off screen right */
+.home__plane--ltr {
+  left: 0;
+  animation: fly-ltr linear infinite both;
+  transform: translateX(-120px);
+}
+
+/* Right-to-left: starts off screen right, ends off screen left */
+.home__plane--rtl {
+  right: 0;
+  animation: fly-rtl linear infinite both;
+  transform: translateX(120px);
+}
+
+.home__plane-body {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Animated flag iframe — scales the 384×272 canvas down to 80×57 px */
+.home__plane-flag-wrap {
+  width: 80px;
+  height: 57px;
+  overflow: hidden;
+  flex-shrink: 0;
+  border-radius: 4px;
+  position: relative;
+  pointer-events: none;
+}
+
+.home__plane-flag-iframe {
+  width: 384px;
+  height: 310px;
+  border: none;
+  display: block;
+  pointer-events: none;
+  transform: scale(0.20833);
+  transform-origin: 0 0;
+}
+
+/* Static custom-flag avatars (LinkedIn / RADCOM logos) */
+.home__plane-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+/* Animated RADCOM waving-flag GIFs */
+.home__plane-gif {
+  width: 160px;
+  height: auto;
+  flex-shrink: 0;
+  display: block;
+  border-radius: 4px;
+}
+
+/* LTR: gif is left of plane — close horizontal gap + shift down to match plane */
+.home__plane-gif--ltr {
+  margin-right: -110px;
+  transform: scaleX(-1) translateY(12px);
+}
+
+/* RTL: gif is right of plane — close horizontal gap + shift down to match plane */
+.home__plane-gif--rtl {
+  margin-left: -110px;
+  transform: translateY(12px);
+}
+
+.home__plane-img {
+  width: 56px;
+  height: auto;
+  display: block;
+  image-rendering: auto;
+  flex-shrink: 0;
+  transition: transform 0.25s ease;
+}
+
+/*
+  Measured nose-to-tail axis angles (pixel centroid analysis, 5% extremes):
+    Type 1 — airplane.png:     screen_angle = -1.63°  → css rotate(+1.63deg)
+    Type 2 — airplane-(2).png: screen_angle = +9.37°  → css rotate(-9.37deg)
+    Type 3 — take-off.png:     screen_angle = +1.51°  → css rotate(-1.51deg)
+  Legacy SVGs are drawn with horizontal rects — no rotation needed.
+  New PNGs face RIGHT  → flip for RTL planes.
+  Legacy SVGs face LEFT → flip for LTR planes (opposite).
+*/
+.home__plane-img--type-1 { transform: rotate(4.82deg); }
+.home__plane-img--type-2 { transform: rotate(-6.68deg); }
+.home__plane-img--type-3 { transform: rotate(7.08deg); }
+
+/* Flip (scaleX) + rotation combined — same rotation value, flip applied after */
+.home__plane-img--flip                          { transform: scaleX(-1); }
+.home__plane-img--type-1.home__plane-img--flip  { transform: scaleX(-1) rotate(4.82deg); }
+.home__plane-img--type-2.home__plane-img--flip  { transform: scaleX(-1) rotate(-6.68deg); }
+.home__plane-img--type-3.home__plane-img--flip  { transform: scaleX(-1) rotate(7.08deg); }
+
+@keyframes title-gradient-shift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* RADCOM logo — gradient clipped to logo shape via mask */
+.home__intro-radcom-logo-wrap {
+  display: inline-block;
+  height: 0.72em;
+  width: 4.41em;
+  flex-shrink: 0;
+  vertical-align: middle;
+  background: linear-gradient(
+    90deg,
+    var(--accent),
+    var(--gold),
+    var(--accent-hover),
+    var(--purple),
+    var(--accent)
+  );
+  background-size: 300% 300%;
+  animation: title-gradient-shift 5s ease infinite;
+  -webkit-mask-image: url('/Standard%20logo%20no%20background.png?v=2');
+  mask-image: url('/Standard%20logo%20no%20background.png?v=2');
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+.home__plane-flag {
+  width: 58px;
+  height: auto;
+  flex-shrink: 0;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.7);
+}
+
+/* LinkedIn profile photo — same style as a country flag */
+.home__plane-avatar {
+  width: 58px;
+  height: 38px;
+  flex-shrink: 0;
+  border-radius: 4px;
+  object-fit: cover;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.7);
+}
+
+@keyframes fly-ltr {
+  0%   { transform: translateX(-140px); opacity: 0; }
+  5%   { opacity: 0.85; }
+  95%  { opacity: 0.85; }
+  100% { transform: translateX(calc(100vw + 140px)); opacity: 0; }
+}
+
+@keyframes fly-rtl {
+  0%   { transform: translateX(140px); opacity: 0; }
+  5%   { opacity: 0.85; }
+  95%  { opacity: 0.85; }
+  100% { transform: translateX(calc(-100vw - 140px)); opacity: 0; }
+}
+
+/* ── Compact intro floating over stadium bg ──────────────────── */
+
+.home__intro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 16px;
+  padding: 48px 24px 36px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.home__intro-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.home__intro-wc-logo {
+  height: 120px;
+  width: auto;
+  object-fit: contain;
+  flex-shrink: 0;
+  filter:
+    drop-shadow(0 0 14px var(--gold))
+    drop-shadow(0 0 32px var(--purple))
+    drop-shadow(0 0 56px var(--accent))
+    drop-shadow(0 2px 10px rgba(0, 0, 0, 0.55));
+}
+
+.home__intro-title {
+  margin: 0;
+  font-size: clamp(3.2rem, 8vw, 5.6rem);
+  font-family: var(--heading);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  line-height: 1.1;
+  padding-bottom: 0.15em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.18em;
+  flex-wrap: wrap;
+  /* Animated RADCOM palette gradient */
+  background: linear-gradient(
+    90deg,
+    var(--accent),
+    var(--gold),
+    var(--accent-hover),
+    var(--purple),
+    var(--accent)
+  );
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: title-gradient-shift 5s ease infinite;
+  text-shadow: none;
+}
+
+.home__intro-auth {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 4px;
+}
+
+.home__intro-btn {
+  padding: 7px 20px;
+  border-radius: var(--radius);
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+  border: none;
+}
+
+.home__intro-btn--solid {
+  background: var(--neon);
+  color: #051228;
+}
+.home__intro-btn--solid:hover {
+  background: #33d4ff;
+  box-shadow: 0 4px 18px var(--neon-glow);
+}
+
+.home__intro-btn--ghost {
+  background: transparent;
+  color: #ffffff;
+  border: 1.5px solid rgba(255,255,255,0.35);
+}
+.home__intro-btn--ghost:hover {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.6);
+}
+
+.home__intro-welcome {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: var(--radius-lg);
+  padding: 9px 18px;
+  color: rgba(255,255,255,0.82);
+  font-size: 0.95rem;
+}
+.home__intro-welcome strong {
+  color: var(--gold);
+  font-weight: 700;
+}
+
+/* ── Stats ribbon ────────────────────────────────────────────── */
+
+.home__stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  background: rgba(5, 12, 30, 0.55);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(255,255,255,0.08);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+  width: 100%;
+}
+
+.home__stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 16px;
+  gap: 3px;
+  border-right: 1px solid rgba(255,255,255,0.08);
+}
+
+.home__stat:last-child { border-right: none; }
+
+.home__stat-value {
+  font-size: 2rem;
+  font-family: var(--heading);
+  font-weight: 400;
+  color: var(--gold);
+  letter-spacing: 0.04em;
+  line-height: 1;
+  text-shadow: 0 0 12px var(--gold-glow);
+}
+
+.home__stat-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  font-family: var(--sans);
+  color: rgba(255,255,255,0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* ── Bento grid ──────────────────────────────────────────────── */
+
+.home__bento {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  padding: 20px 32px 40px;
+  max-width: 740px;
+  width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.home__card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  background: rgba(8, 16, 40, 0.80);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1.5px solid rgba(255,255,255,0.12);
+  border-radius: var(--radius-xl);
+  padding: 18px 16px;
+  cursor: pointer;
+  text-align: left;
+  color: #ffffff;
+  font-family: inherit;
+  transition: transform 0.13s, box-shadow 0.13s, border-color 0.13s;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;   /* keeps ::before z-index contained */
+}
+
+/* Gradient wave — shared by ALL cards, same rate = synchronized */
+.home__card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    130deg,
+    var(--accent),
+    var(--gold),
+    var(--accent-hover),
+    var(--purple),
+    var(--accent)
+  );
+  background-size: 300% 300%;
+  animation: title-gradient-shift 5s ease infinite;
+  opacity: 0.18;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.home__card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+}
+
+/* Wide bracket card spans all 3 columns — dark style matching other cards */
+.home__card--bracket {
+  grid-column: span 3;
+  flex-direction: row;
+  align-items: center;
+  gap: 18px;
+  background: rgba(8,16,40,0.80);
+  border: 1.5px solid rgba(255,255,255,0.12);
+  color: #ffffff;
+  padding: 18px 22px;
+}
+
+.home__card--bracket::before { opacity: 0.18; }
+
+.home__card--bracket .home__card-label { color: #ffffff; font-size: 1.05rem; }
+.home__card--bracket .home__card-desc  { color: rgba(255,255,255,0.85); }
+
+/* ALL 4 cards: full color wave on hover */
+.home__card--bracket:hover,
+.home__card--leaderboard:hover,
+.home__card--nations:hover,
+.home__card--rules:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 32px rgba(54,178,198,0.3);
+  border-color: transparent;
+  background: linear-gradient(rgba(8,16,40,0.85), rgba(8,16,40,0.85)) padding-box,
+              linear-gradient(90deg, var(--accent), var(--gold), var(--accent-hover), var(--purple), var(--accent)) border-box;
+  background-size: auto, 300% 300%;
+  animation: card-border-wave 5s ease infinite;
+}
+
+.home__card--bracket:hover::before,
+.home__card--leaderboard:hover::before,
+.home__card--nations:hover::before,
+.home__card--rules:hover::before {
+  opacity: 1;
+}
+
+.home__card--bracket:hover .home__card-label,
+.home__card--leaderboard:hover .home__card-label,
+.home__card--nations:hover .home__card-label,
+.home__card--rules:hover .home__card-label {
+  background: none;
+  -webkit-background-clip: unset;
+  background-clip: unset;
+  -webkit-text-fill-color: #ffffff;
+  color: #ffffff;
+}
+
+.home__card-icon {
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+.home__card-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.home__card-label {
+  font-size: 0.95rem;
+  font-family: var(--heading);
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  color: #ffffff;
+}
+
+.home__card-desc {
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.65);
+  line-height: 1.5;
+}
+
+.home__card-arrow {
+  font-size: 1.2rem;
+  color: rgba(255,255,255,0.65);
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+/* ── Footer note ─────────────────────────────────────────────── */
+
+.home__footer {
+  text-align: center;
+  font-size: 0.75rem;
+  font-family: var(--heading);
+  letter-spacing: 0.16em;
+  color: rgba(255,255,255,0.25);
+  padding-bottom: 32px;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+/* ── Responsive ──────────────────────────────────────────────── */
+
+@media (max-width: 680px) {
+  .home__intro {
+    padding: 32px 20px 24px;
+  }
+
+  .home__stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .home__stat:nth-child(2) { border-right: none; }
+
+  .home__bento {
+    grid-template-columns: 1fr;
+    padding: 16px 16px 32px;
+  }
+
+  .home__card--bracket {
+    grid-column: span 1;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .home__card-arrow { display: none; }
+}
+

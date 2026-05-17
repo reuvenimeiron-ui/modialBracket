@@ -1,122 +1,197 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+// ============================================================
+// App — root component
+//
+// Responsibilities:
+//   - Load seed data on first mount
+//   - Run auto-lock hook
+//   - Manage active view (home | bracket)
+//   - Render persistent header + current view
+//   - Manage which modal is open (one at a time)
+// ============================================================
+
+import { useEffect, useState } from 'react';
+import { Bracket } from './components/Bracket/Bracket';
+import { Home } from './components/Home/Home';
+import { CountriesPage } from './components/Home/CountriesPage';
+import { LeaderboardPage } from './components/Leaderboard/LeaderboardPage';
+import { AdminLeaderboardPage } from './components/Leaderboard/AdminLeaderboardPage';
+import { MatchPredictionModal } from './components/Modals/MatchPredictionModal';
+import { MatchResultModal } from './components/Modals/MatchResultModal';
+import { ScoringRulesModal } from './components/Modals/ScoringRulesModal';
+import { LoginModal } from './components/Users/LoginModal';
+import { RegisterModal } from './components/Users/RegisterModal';
+import { AdminModal } from './components/Users/AdminModal';
+import { DebugPanel } from './components/Users/DebugPanel';
+import { useTournamentStore } from './components/State/tournamentStore';
+import { useAutoLock } from './components/State/useAutoLock';
+import { initSeedData } from './seedData';
+import './App.css';
+
+type View = 'home' | 'bracket' | 'leaderboard' | 'countries' | 'admin-leaderboard';
+
+type ModalState =
+  | { type: 'none' }
+  | { type: 'login' }
+  | { type: 'register' }
+  | { type: 'admin' }
+  | { type: 'scoringRules' }
+  | { type: 'prediction'; matchId: string }
+  | { type: 'result'; matchId: string };
 
 function App() {
-  const [count, setCount] = useState(0)
+  const currentUser = useTournamentStore(s => s.currentUser);
+  const logoutUser = useTournamentStore(s => s.logoutUser);
+  const isAdmin = useTournamentStore(s => s.isAdmin);
+  const exitAdminMode = useTournamentStore(s => s.exitAdminMode);
+
+  const [view, setView] = useState<View>('home');
+  const [modal, setModal] = useState<ModalState>({ type: 'none' });
+
+  // Load seed data once on mount
+  useEffect(() => { initSeedData(); }, []);
+
+  // Auto-lock matches whose startTime has passed
+  useAutoLock();
+
+  function closeModal() { setModal({ type: 'none' }); }
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
+    <div className="app">
+      {/* ── Persistent Header ─────────────────────────────────── */}
+      <header className="app-header">
+        <button className="app-header__brand" onClick={() => setView('home')}>
+          <img src="/new%20symbols/World-Cup-2026-Logo-V3.png" alt="" className="app-header__brand-logo" />
+          <span className="app-header__radcom-logo-wrap" role="img" aria-label="RADCOM's" />
+          World Cup Challenge
         </button>
-      </section>
 
-      <div className="ticks"></div>
+        <nav className="app-header__nav">
+          <button
+            className={`app-header__btn ${view === 'bracket' ? 'app-header__btn--active' : ''}`}
+            onClick={() => setView('bracket')}
+          >
+            My Bracket
+          </button>
+          <button
+            className={`app-header__btn ${view === 'leaderboard' ? 'app-header__btn--active' : ''}`}
+            onClick={() => setView('leaderboard')}
+          >
+            Leaderboard
+          </button>
+          <button className="app-header__btn" onClick={() => setModal({ type: 'scoringRules' })}>
+            Scoring Rules
+          </button>
+          {/* Hidden admin-only leaderboard shortcut */}
+          {isAdmin && (
+            <button
+              className={`app-header__btn ${view === 'admin-leaderboard' ? 'app-header__btn--active' : ''}`}
+              onClick={() => setView('admin-leaderboard')}
+              title="Admin leaderboard view"
+            >
+              📊 Live Board
+            </button>
+          )}
+        </nav>
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
+        <div className="app-header__auth">
+          {/* Admin mode badge / toggle */}
+          {isAdmin ? (
+            <div className="app-header__admin-badge">
+              <span>🔑 Admin</span>
+              <button
+                className="app-header__admin-exit"
+                onClick={exitAdminMode}
+                title="Exit admin mode"
+              >
+                ✕
+              </button>
+            </div>
+          ) : (
+            <button
+              className="app-header__btn app-header__btn--admin"
+              onClick={() => setModal({ type: 'admin' })}
+              title="Admin access"
+            >
+              🔐
+            </button>
+          )}
+
+          {currentUser ? (
+            <>
+              <span className="app-header__user">👤 {currentUser.displayName}</span>
+              <button className="app-header__btn app-header__btn--secondary" onClick={logoutUser}>
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <button className="app-header__btn" onClick={() => setModal({ type: 'login' })}>
+                Sign In
+              </button>
+              <button className="app-header__btn app-header__btn--primary" onClick={() => setModal({ type: 'register' })}>
+                Register
+              </button>
+            </>
+          )}
         </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+      </header>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+      {/* ── Active view ───────────────────────────────────────── */}
+      <main className="app-main">
+        {view === 'home' && (
+          <Home
+            onGoToBracket={() => setView('bracket')}
+            onGoToLeaderboard={() => setView('leaderboard')}
+            onOpenScoringRules={() => setModal({ type: 'scoringRules' })}
+            onOpenLogin={() => setModal({ type: 'login' })}
+            onOpenRegister={() => setModal({ type: 'register' })}
+            onGoToCountries={() => setView('countries')}
+            currentUserName={currentUser?.displayName ?? null}
+          />
+        )}
+        {view === 'bracket' && (
+          <Bracket
+            onOpenPrediction={matchId => setModal({ type: 'prediction', matchId })}
+            onOpenResult={matchId => {
+              if (isAdmin) setModal({ type: 'result', matchId });
+            }}
+          />
+        )}
+        {view === 'leaderboard' && (
+          <LeaderboardPage onBack={() => setView('home')} />
+        )}
+        {view === 'countries' && (
+          <CountriesPage onBack={() => setView('home')} />
+        )}
+        {view === 'admin-leaderboard' && isAdmin && (
+          <AdminLeaderboardPage />
+        )}
+      </main>
+
+      {/* ── Modals (one at a time) ────────────────────────────── */}
+      {modal.type === 'admin' && (
+        <AdminModal onClose={closeModal} />
+      )}
+
+      {/* Debug panel — only mounted in admin mode */}
+      {isAdmin && <DebugPanel />}
+      {modal.type === 'login' && (
+        <LoginModal onClose={closeModal} />
+      )}
+      {modal.type === 'register' && (
+        <RegisterModal onClose={closeModal} />
+      )}
+      {modal.type === 'scoringRules' && (
+        <ScoringRulesModal onClose={closeModal} />
+      )}
+      {modal.type === 'prediction' && (
+        <MatchPredictionModal matchId={modal.matchId} onClose={closeModal} />
+      )}
+      {modal.type === 'result' && (
+        <MatchResultModal matchId={modal.matchId} onClose={closeModal} />
+      )}
+    </div>
+  );
 }
 
 export default App

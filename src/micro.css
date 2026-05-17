@@ -1,0 +1,177 @@
+/* ============================================================
+   micro.css — Game-feel micro-interactions (Phase G)
+   All pure CSS — no JS libraries.
+   ============================================================ */
+
+/* ──────────────────────────────────────────────────────────────
+   1. CONFETTI BURST — fires when prediction is saved
+   12 confetti pieces radiate outward from the center of the form.
+   Each piece uses --i (0-11) to pick angle + color.
+   ────────────────────────────────────────────────────────────── */
+
+.confetti-burst {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  overflow: visible;
+}
+
+.confetti-piece {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  animation: confetti-fly 0.65s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  /* Rotate 30° × piece-index to spread 360°  */
+  --angle: calc(var(--i, 0) * 30deg);
+  --dist: 80px;
+  /* Cycle through vivid game colors */
+  background: hsl(calc(var(--i, 0) * 30), 90%, 60%);
+  transform-origin: center;
+}
+
+@keyframes confetti-fly {
+  0% {
+    opacity: 1;
+    transform: rotate(var(--angle)) translateY(0) scale(1);
+  }
+  60% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(var(--angle)) translateY(calc(var(--dist) * -1)) scale(0.4) rotate(180deg);
+  }
+}
+
+/* Form dims slightly while confetti plays */
+.form--saved {
+  opacity: 0.6;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+
+/* ──────────────────────────────────────────────────────────────
+   2. GOLD SHIMMER SWEEP — fires when admin submits a result
+   Full-width gold light sweeps left→right across the form.
+   ────────────────────────────────────────────────────────────── */
+
+.form--result-flash {
+  position: relative;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.form--result-flash::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent          0%,
+    rgba(191,118,177,0.18) 40%,
+    rgba(191,118,177,0.32) 50%,
+    rgba(191,118,177,0.18) 60%,
+    transparent          100%
+  );
+  animation: gold-sweep 0.75s ease-in-out both;
+  pointer-events: none;
+  z-index: 5;
+}
+
+@keyframes gold-sweep {
+  0%   { transform: translateX(-100%); opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { transform: translateX(100%);  opacity: 0; }
+}
+
+/* ──────────────────────────────────────────────────────────────
+   3. BRACKET CARD DRAW-IN — cards animate in on bracket load.
+   Applied via .bracket__field — children cascade in with a
+   short translateY + fade stagger.
+   ────────────────────────────────────────────────────────────── */
+
+@keyframes card-draw-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Every .ms (match slot) inside the bracket field fades in */
+.bracket__field .ms {
+  animation: card-draw-in 0.30s ease both;
+}
+
+/* Stagger: left half columns get delays based on DOM order (nth-child) */
+.bracket__half--left .bracket__col:nth-child(1) .ms { animation-delay: 0.00s; }
+.bracket__half--left .bracket__col:nth-child(2) .ms { animation-delay: 0.06s; }
+.bracket__half--left .bracket__col:nth-child(3) .ms { animation-delay: 0.12s; }
+.bracket__half--left .bracket__col:nth-child(4) .ms { animation-delay: 0.18s; }
+.bracket__half--left .bracket__col:nth-child(5) .ms { animation-delay: 0.24s; }
+
+/* Right half mirrors from inside → out */
+.bracket__half--right .bracket__col:nth-child(1) .ms { animation-delay: 0.24s; }
+.bracket__half--right .bracket__col:nth-child(2) .ms { animation-delay: 0.18s; }
+.bracket__half--right .bracket__col:nth-child(3) .ms { animation-delay: 0.12s; }
+.bracket__half--right .bracket__col:nth-child(4) .ms { animation-delay: 0.06s; }
+.bracket__half--right .bracket__col:nth-child(5) .ms { animation-delay: 0.00s; }
+
+/* Final + champion box draw in last */
+.bracket__center .ms,
+.bracket__champion { animation: card-draw-in 0.35s 0.28s ease both; }
+
+/* ──────────────────────────────────────────────────────────────
+   4. BUTTON PRESS — tactile down-bounce on all .btn clicks
+   ────────────────────────────────────────────────────────────── */
+
+.btn:active:not(:disabled) {
+  transform: translateY(2px) scale(0.97);
+  transition: transform 0.06s ease;
+}
+
+/* ──────────────────────────────────────────────────────────────
+   5. RANK-UP PULSE — leaderboard row briefly gold-pulses
+   Add class .table-row--rank-up via JS for a single play.
+   Uses animation-fill-mode: forwards so it lands on normal state.
+   ────────────────────────────────────────────────────────────── */
+
+@keyframes rank-up-pulse {
+  0%   { background: rgba(191,118,177,0.00); }
+  25%  { background: rgba(191,118,177,0.22); box-shadow: inset 0 0 0 1px rgba(191,118,177,0.4); }
+  60%  { background: rgba(191,118,177,0.10); }
+  100% { background: rgba(191,118,177,0.00); }
+}
+
+.table tr.table-row--rank-up td {
+  animation: rank-up-pulse 0.9s ease both;
+}
+
+/* ──────────────────────────────────────────────────────────────
+   6. NAV BUTTON ACTIVE — underline sweep on active nav item
+   ────────────────────────────────────────────────────────────── */
+
+.app-header__btn--active {
+  position: relative;
+}
+
+.app-header__btn--active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 12px;
+  right: 12px;
+  height: 2px;
+  background: var(--neon);
+  border-radius: 2px;
+  box-shadow: 0 0 6px var(--neon-glow);
+  animation: nav-underline-in 0.22s ease both;
+}
+
+@keyframes nav-underline-in {
+  from { transform: scaleX(0); opacity: 0; }
+  to   { transform: scaleX(1); opacity: 1; }
+}

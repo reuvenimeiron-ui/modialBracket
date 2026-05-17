@@ -24,12 +24,15 @@ interface TableProps<T extends Record<string, unknown>> {
   rows: T[];
   /** Optional key extractor; defaults to row index */
   rowKey?: (row: T, index: number) => string | number;
+  /** Optional class name per row */
+  rowClassName?: (row: T, index: number) => string;
 }
 
 export function Table<T extends Record<string, unknown>>({
   columns,
   rows,
   rowKey,
+  rowClassName,
 }: TableProps<T>) {
   return (
     <div className="table-wrapper">
@@ -50,7 +53,11 @@ export function Table<T extends Record<string, unknown>>({
             </tr>
           ) : (
             rows.map((row, i) => (
-              <tr key={rowKey ? rowKey(row, i) : i}>
+              <tr
+                key={rowKey ? rowKey(row, i) : i}
+                className={rowClassName ? rowClassName(row, i) : ''}
+                style={{ animationDelay: `${i * 0.045}s` }}
+              >
                 {columns.map(col => (
                   <td key={String(col.key)}>
                     {col.render

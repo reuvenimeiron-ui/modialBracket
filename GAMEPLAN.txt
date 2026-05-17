@@ -1,0 +1,576 @@
+================================================================
+  GAME-IFICATION WORK PLAN — Mondial Bracket
+  Goal: Make the app feel like a game, not a corporate dashboard
+================================================================
+
+----------------------------------------------------------------
+CURRENT PROBLEMS (why it feels corporate)
+----------------------------------------------------------------
+- Pure white background everywhere below the hero
+- system-ui font — same as Excel and Outlook
+- Flat borders + grey shadows — zero energy
+- Match cards look like list items, not battle cards
+- Leaderboard is a plain HTML table
+- Modals are white popup forms
+- No celebration moments — predictions save silently
+
+----------------------------------------------------------------
+PHASE A — Foundation: Dark Stadium Theme
+----------------------------------------------------------------
+Files:  src/index.css
+What:   Flip all CSS variables to a dark/stadium palette.
+        Surfaces go dark navy. Accents become electric blue +
+        gold + vivid green. Instantly transforms every component.
+Assets: NONE — pure CSS.
+
+----------------------------------------------------------------
+PHASE B — Typography: Gaming Fonts
+----------------------------------------------------------------
+Files:  index.html, src/index.css
+What:   Replace system-ui with two Google Fonts:
+        - "Bebas Neue"  — all-caps ultra-bold for headings,
+                          scores, round labels
+        - "Rajdhani"   — sporty condensed for body text & names
+Assets: Add ONE <link> to index.html (no files to host):
+        https://fonts.googleapis.com/css2?family=Bebas+Neue
+        &family=Rajdhani:wght@400;500;600;700&display=swap
+
+----------------------------------------------------------------
+PHASE C — Match Cards: Battle Cards
+----------------------------------------------------------------
+Files:  src/components/Bracket/Bracket.css,
+        src/components/Bracket/MatchCard.tsx
+What:
+  - Large flag on left, team name in Bebas Neue
+  - Score in a big gold box in the center
+  - Winner row: gold left-border glow + subtle shimmer
+  - Loser row: dimmed opacity
+  - Hover: card lifts translateY(-2px) + electric-blue glow border
+  - LOCKED badge with red pulse
+  - PREDICTED badge with green pulse
+Assets: NONE — pure CSS + existing flags
+
+----------------------------------------------------------------
+PHASE D — Bracket: Stadium Field
+----------------------------------------------------------------
+Files:  src/components/Bracket/Bracket.css
+What:
+  - Bracket background: subtle SVG grass pitch pattern
+  - Connector lines between rounds become gold
+  - Round labels: dark pill with neon text (like FIFA stage banners)
+Assets:
+  [I BUILD]  Grass pitch SVG pattern (inline in CSS)
+  [OPTIONAL] Stadium crowd silhouette — horizontal dark
+             silhouette band at top of bracket.
+             Size: ~1400x120px PNG or SVG.
+             I can generate a simple SVG version in code.
+
+----------------------------------------------------------------
+PHASE E — Leaderboard: Podium Page
+----------------------------------------------------------------
+Files:  src/components/Leaderboard/LeaderboardPage.tsx,
+        src/components/Leaderboard/LeaderboardPage.css
+What:
+  - Top 3 get a podium block (2nd | 1st | 3rd) above the table
+  - Gold / Silver / Bronze rank indicators
+  - Current user's row highlighted in gold
+  - Table rows animate in with a stagger effect
+Assets:
+  [I BUILD]  Trophy SVG — /public/trophy.svg (~120x160px)
+  [I BUILD]  Medal icons — inline SVG / emoji
+
+----------------------------------------------------------------
+PHASE F — Modals: Glassmorphic Panels
+----------------------------------------------------------------
+Files:  src/components/UI/Modal.css,
+        src/components/Modals/Modals.css
+What:
+  - Backdrop: darker blur + dark navy tint
+  - Panel: rgba(13,20,40,0.92) + backdrop-filter:blur(20px)
+           + glow border (box-shadow: 0 0 0 1px rgba(0,200,255,0.2))
+  - Close button: X circle with glow on hover
+  - Input fields: dark with electric-blue focus ring
+Assets: NONE — pure CSS
+
+----------------------------------------------------------------
+PHASE G — Micro-interactions: Game Feels
+----------------------------------------------------------------
+Files:  src/components/Modals/MatchPredictionModal.tsx,
+        src/components/Modals/MatchResultModal.tsx,
+        src/components/Leaderboard/LeaderboardPage.css
+What:
+  - Prediction saved  → brief confetti burst (CSS keyframe)
+  - Result submitted  → gold shimmer sweep across the card
+  - New rank achieved → rank-up animation in leaderboard row
+  - Bracket connectors draw in on first load
+    (CSS stroke-dashoffset animation)
+Assets: NONE — pure CSS animations
+
+----------------------------------------------------------------
+PHASE H — Home Page Below-the-fold
+----------------------------------------------------------------
+Files:  src/components/Home/Home.css
+What:
+  - Stats ribbon + bento cards inherit dark theme
+  - Bento section background: subtle pitch grass lines
+  - Bento cards get glass card treatment
+Assets:
+  [OPTIONAL] Hero background image (replaces/overlays the
+             current gradient). Size: 1600x600px max JPG/PNG.
+
+----------------------------------------------------------------
+FULL ASSET LIST
+----------------------------------------------------------------
+
+#  Asset                         Format   Size         Owner
+-- ----------------------------- -------- ------------ ----------
+1  Google Fonts link             URL      —            I BUILD
+   (Bebas Neue + Rajdhani)
+2  Grass pitch SVG pattern       CSS/SVG  —            I BUILD
+3  Trophy SVG                    SVG      ~120x160px   I BUILD
+4  Gold/Silver/Bronze medals     SVG/emoji—            I BUILD
+5  Confetti burst animation      CSS      —            I BUILD
+6  Stadium silhouette banner     SVG/PNG  1400x120px   YOU SOURCE
+   (crowd shadows top of bracket)         (optional — I can do SVG)
+7  Hero background image         JPG/PNG  1600x600px   YOU SOURCE
+   (replaces/overlays gradient)           (optional)
+
+Bottom line: Phases A-C, F, G, H need ZERO files from you.
+Only items 6 and 7 are optional external assets — and I can
+generate simplified SVG stand-ins for both if preferred.
+
+----------------------------------------------------------------
+PHASE I — SPRITES: Extra Plane Types & UI Icons
+----------------------------------------------------------------
+Category: Sprite images (PNG/SVG pixel art)
+Files:    public/  (drop files here)
+          src/components/Home/Home.tsx  (add to PLANES array)
+          src/components/UI/  (icon components)
+
+Resources you provide (drop in /public/):
+  plane4.svg / plane4.png   — 4th plane style (any design)
+  plane5.svg / plane5.png   — 5th plane style (any design)
+  icon-ball.svg             — stylized soccer ball for match cards
+  icon-boot.svg             — boot/cleat for leading scorer field
+  icon-whistle.svg          — whistle for locked/referee badge
+  icon-trophy-gold.svg      — gold trophy for leaderboard #1
+  icon-trophy-silver.svg    — silver trophy for leaderboard #2
+  icon-trophy-bronze.svg    — bronze trophy for leaderboard #3
+
+What I do once you provide them:
+  - Integrate new planes into the PLANES rotation
+  - Swap emoji-based UI labels for the custom SVG icons
+  - Add hover zoom effect on each sprite
+
+Sprite spec (for your designer):
+  - Planes: face LEFT in the file (code handles flipping)
+  - Recommended size: 120-160px wide, transparent PNG or SVG
+  - Icons: 32x32px or 48x48px, transparent background
+  - Color style: match the dark stadium palette (see Phase A)
+
+----------------------------------------------------------------
+PHASE J — PHOTOGRAPHY & ILLUSTRATIONS: Backgrounds & Cards
+----------------------------------------------------------------
+Category: Raster images (JPG/PNG/WebP)
+Files:    public/images/  (create this folder, drop files here)
+          src/components/Home/Home.css
+          src/components/Bracket/Bracket.css
+          src/components/Leaderboard/LeaderboardPage.css
+
+Resources you provide (drop in /public/images/):
+  hero-bg.jpg               — Hero section background
+                              Suggested: stadium at night, aerial
+                              pitch, or dramatic lighting shot
+                              Size: 1600x700px, JPG/WebP ≤300KB
+
+  bracket-bg.jpg            — Bracket page background texture
+                              Suggested: grass texture, dark
+                              stadium interior, or abstract field
+                              Size: 1920x1080px, JPG/WebP ≤400KB
+
+  leaderboard-bg.jpg        — Leaderboard section background
+                              Suggested: scoreboard, trophy shelf,
+                              crowd bokeh, or stadium lights
+                              Size: 1600x600px, JPG/WebP ≤250KB
+
+  crowd-silhouette.png      — Silhouette of a crowd cheering
+                              Used as a decorative top band
+                              Size: 1400x120px, PNG transparent
+
+  confetti-sheet.png        — Spritesheet of confetti pieces
+                              (optional — CSS fallback exists)
+                              Size: 256x256px, PNG transparent
+
+What I do once you provide them:
+  - Apply hero-bg.jpg as hero overlay (dark gradient on top)
+  - Apply bracket-bg.jpg as a fixed background with overlay
+  - Apply leaderboard-bg.jpg as section background
+  - Place crowd-silhouette.png as decorative top band on bracket
+  - Wire confetti-sheet into the celebration animation
+
+Image tips:
+  - All images get a dark overlay in CSS, so they can be vivid
+  - Avoid text/logos in images (we overlay our own)
+  - Free sources: unsplash.com, pexels.com (search "stadium",
+    "soccer", "world cup", "crowd cheering")
+
+----------------------------------------------------------------
+PHASE K — VISUAL EFFECTS: Particles, Shaders & Animated Assets
+----------------------------------------------------------------
+Category: Effect assets (Lottie JSON, animated SVG, GLSL, video)
+Files:    public/effects/  (create this folder, drop files here)
+          src/components/Home/Home.tsx
+          src/components/Modals/MatchPredictionModal.tsx
+          src/components/Leaderboard/LeaderboardPage.tsx
+
+Resources you provide (drop in /public/effects/):
+  confetti.json             — Lottie animation for prediction
+                              saved celebration
+                              Tool: lottiefiles.com (free library)
+                              Search: "confetti", "celebration",
+                              "goal celebration"
+
+  goal-explosion.json       — Lottie animation played when a
+                              match result is submitted
+                              Search: "explosion", "burst",
+                              "soccer goal"
+
+  rank-up.json              — Lottie for leaderboard rank
+                              improvement notification
+                              Search: "level up", "rank up",
+                              "stars burst"
+
+  fireworks.json            — Lottie looping fireworks for the
+                              bracket Final match card
+                              Search: "fireworks loop"
+
+  stadium-loop.mp4          — (OPTIONAL) Short looping video
+                              clip of stadium atmosphere
+                              Used as muted autoplay hero bg
+                              Size: ≤3MB, 1280x720, no audio
+
+What I do once you provide them:
+  - Install lottie-react (npm) and wire each JSON to its trigger
+  - confetti.json   → fires when prediction is saved
+  - goal-explosion  → fires when admin submits a result
+  - rank-up.json    → fires when user climbs the leaderboard
+  - fireworks.json  → loops on the Final match card
+  - stadium-loop.mp4 → plays as muted hero background video
+
+Effect tips:
+  - Lottie files: download the JSON (not dotlottie) from
+    lottiefiles.com — they are free and lightweight (~20-80KB)
+  - Pick dark-background-friendly animations (light particles
+    on dark = great; white explosions on white = invisible)
+  - Test loop vs one-shot before choosing
+
+----------------------------------------------------------------
+PHASE L — SPORTS DATA: Real-Life Score Source
+----------------------------------------------------------------
+Category: External API integration
+Prerequisite: Free API key from football-data.org (2 min signup)
+Files:    src/services/footballDataApi.ts  (new)
+          src/services/matchMapper.ts      (new)
+          .env                             (new — store key here)
+
+Step 1 — Get your key:
+  Go to https://www.football-data.org/
+  Sign up for the free tier (10 req/min, WC 2026 included)
+  Copy your API key
+
+Step 2 — Add to project:
+  Create .env in project root:
+    VITE_FOOTBALL_DATA_KEY=your_key_here
+  Add .env to .gitignore (already ignored by Vite default)
+
+What I build (footballDataApi.ts):
+  - fetchMatchResult(teamA, teamB, date) → raw API response
+  - Uses competition code "WC" and filters by team names
+  - Returns null if match not finished yet
+
+What I build (matchMapper.ts):
+  - Maps football-data.org response → your MatchResult shape
+  - Handles team name variants (e.g. "USA" → "United States")
+  - Extracts leading scorer from top scorer stats endpoint
+  - Returns null-safe result (match still in progress = null)
+
+API response shape → your MatchResult:
+  score.fullTime.home  → finalScore.teamA
+  score.fullTime.away  → finalScore.teamB
+  homeTeam.name        → winner (if score higher)
+  scorers[0].player    → leadingScorer
+
+Alternatives if football-data.org is unavailable:
+  - API-Football (rapidapi.com)  — faster, paid after 100 req/day
+  - ESPN unofficial API          — free, no key, may break
+  - Manual entry via admin panel — already implemented
+
+----------------------------------------------------------------
+PHASE M — AUTO-FETCHER: Browser-Side Result Poller
+----------------------------------------------------------------
+Category: Background hook, no backend required
+Files:    src/services/useAutoResults.ts  (new)
+          src/App.tsx                     (wire hook)
+          src/components/Users/DebugPanel.tsx  (status display)
+
+What I build (useAutoResults.ts):
+  A React hook that runs while admin is logged in:
+    - Every 60 seconds, scans for matches that are:
+        locked = true  AND  result = undefined
+    - For each such match, calls footballDataApi.fetchMatchResult()
+    - If result is ready (match finished), calls submitResult()
+    - Logs every fetch attempt + outcome to the debug event bus
+    - Exposes: { lastPollAt, pendingCount, fetchErrors[] }
+
+Wired into App.tsx:
+    useAutoResults();   // one line, runs silently in background
+
+Debug Panel additions (new "🤖 Auto-Fetch" section in Events tab):
+    - Last poll timestamp
+    - How many matches are waiting for a result
+    - Count of successful auto-submissions
+    - Any fetch errors with full message
+
+Polling safeguards:
+  - Does nothing if no API key is set (fails gracefully)
+  - Does nothing if tournament has no locked matches
+  - Does not re-fetch a match that already has a result
+  - Stops polling when all matches have results
+
+Manual override:
+  Admin can still submit a result manually via the bracket
+  (overrides any auto-fetched result if needed)
+
+----------------------------------------------------------------
+PHASE N — AI LAYER: Smart Parsing & Name Matching
+----------------------------------------------------------------
+Category: Optional LLM augmentation (OpenAI / Gemini)
+Prerequisite: OpenAI API key (or Gemini key)
+Files:    src/services/aiResultParser.ts   (new)
+          src/services/matchMapper.ts      (extend)
+          .env                             (add key)
+
+Important rule:
+  NEVER use an LLM to get scores directly.
+  LLMs hallucinate numbers. Use them ONLY to process text.
+
+Use case 1 — Leading scorer extraction:
+  football-data.org free tier does not always return scorer.
+  Feed the raw match report text to GPT-4o-mini:
+    Prompt: "From this match report, extract the player who
+    scored the most goals. Return JSON: { player: string }.
+    Report: {matchReportText}"
+  Model: gpt-4o-mini (cheap, fast, accurate for extraction)
+  Cost: ~$0.0002 per match
+
+Use case 2 — Team name normalisation:
+  API returns "United States Men's National Team"
+  Your store has "United States"
+  LLM maps the variant → canonical name reliably
+  Alternative: a static alias map (no API cost, preferred)
+
+Use case 3 — Match summary in prediction modal:
+  After a result is submitted, show a 2-line AI summary:
+    "Brazil beat France 2-1 in a tense affair. Vinícius Jr
+    struck in the 67th and 89th minute to seal the win."
+  Source: feed the raw scorer/event data to the LLM
+  Displayed as a read-only blurb under the result in the modal
+
+What I build (aiResultParser.ts):
+  - extractLeadingScorer(matchReportText, teamA, teamB) → string
+  - normaliseTeamName(rawName, knownTeams[]) → string
+  - generateMatchSummary(result, events[]) → string
+  - All calls are fire-and-forget with graceful fallback
+    (if LLM fails, the result still saves without scorer/summary)
+
+Add to .env:
+  VITE_OPENAI_KEY=your_key_here
+  (or VITE_GEMINI_KEY if using Google)
+
+Cost estimate for 104 WC 2026 matches (gpt-4o-mini):
+  Leading scorer extraction: ~$0.02 total
+  Match summaries:           ~$0.08 total
+  Total:                     < $0.15 for the whole tournament
+
+----------------------------------------------------------------
+PHASE O — RADCOM EMPLOYEE PROFILE: CSV Pre-load + Extended User Model
+----------------------------------------------------------------
+Category: Data model + admin CSV import + registration auto-fill
+Context:  Site is internal to RADCOM. Every player is an employee.
+          We avoid asking users to paste anything manually.
+          Admin pre-loads the employee list from HiBob once,
+          then registration auto-fills each person's profile.
+
+----------------------------------------------------------------
+O.1 — ADMIN: Export from HiBob + Import CSV
+----------------------------------------------------------------
+Files:    src/components/Users/EmployeeImportPanel.tsx  (new)
+          src/components/State/tournamentStore.ts        (add employeeDirectory)
+
+Step 1 — Admin exports from HiBob:
+  HiBob → People → (...) → Export → CSV
+  Columns used (standard HiBob export):
+    "First Name", "Last Name", "Email", "Job Title",
+    "Site" (= office/country), "Employee ID" (numeric)
+
+Step 2 — Admin imports into app:
+  Debug Panel → new "📂 Employees" tab
+  UI: drag-and-drop or file-picker for the CSV file
+  Parser reads the CSV, builds an employeeDirectory map:
+    email (lowercase) → {
+      displayName: "First Last",
+      jobTitle:    "Senior Engineer",
+      country:     "Israel",
+      hibobUrl:    "https://app.hibob.com/employee-profile/{id}"
+    }
+  Admin sees a preview table (name, email, title, country, URL)
+  Admin clicks "Import X employees" to confirm
+  Stored in tournamentStore as employeeDirectory (in-memory)
+
+CSV parsing:
+  - Uses built-in browser FileReader + manual CSV split (no library)
+  - Handles quoted fields, UTF-8 names
+  - Skips rows with missing email
+  - Duplicate emails: last row wins
+
+----------------------------------------------------------------
+O.2 — REGISTRATION: Auto-fill from Directory
+----------------------------------------------------------------
+Files:    src/components/Users/RegisterModal.tsx
+          src/components/State/tournamentStore.ts (update registerUser)
+
+Registration flow change:
+  1. User enters their work email
+  2. On blur, app looks up email in employeeDirectory
+  3. If found: auto-fills display name, job title, country
+     and stores hibobUrl silently (not shown in form)
+     Shows a green "✓ Profile found" badge
+  4. If not found: user fills in name manually;
+     jobTitle/country/hibobUrl stay empty (shown as "RADCOM Employee")
+  5. User sets password → registers
+
+Fields on the form:
+  - Work email (required — triggers lookup)
+  - Password  (required)
+  - Display name (pre-filled from CSV if found, editable)
+  - Job title (pre-filled, read-only if found)
+  - Country   (pre-filled, read-only if found)
+  - HiBob URL is never shown to the user — stored automatically
+
+Extended User model (src/types.ts):
+  jobTitle:  string   // "Senior Software Engineer"
+  country:   string   // "Israel"
+  hibobUrl:  string   // full validated URL or ""
+
+Data you need to provide:
+  [YOU SOURCE — at Phase O]  The HiBob CSV export.
+                             Standard export, no custom columns needed.
+  [YOU SOURCE — at Phase O]  Confirm the country list; the "Site"
+                             column in HiBob CSV will be used directly.
+
+OPEN ISSUE — HiBob URL construction (must resolve at Phase O):
+  The profile URL format is:
+    https://app.hibob.com/employee-profile/{numericId}
+  The numericId is HiBob's internal system ID — NOT the company
+  employee number. It is unknown whether this ID appears in the
+  standard CSV export.
+
+  Action required at Phase O:
+    1. Export one row from HiBob (just yourself) as CSV
+    2. Check if any column contains a long numeric value
+       matching the ID in your browser URL when viewing a profile
+    3. Report the column name so the CSV parser can use it
+
+  Possible outcomes and how we handle each:
+    A — ID column found in CSV:
+        Parser reads it → URL constructed automatically. Done.
+    B — CSV has a short company ID (e.g. EMP-042), not the URL ID:
+        URL cannot be auto-constructed.
+        Fallback: after auto-fill, show one optional field:
+        "Paste your HiBob profile URL (optional)"
+        pre-filled with nothing, skippable.
+    C — No ID column at all:
+        Same fallback as B.
+
+  Fallback is acceptable — name, title, and country still
+  auto-fill perfectly. HiBob link becomes best-effort only.
+
+----------------------------------------------------------------
+PHASE P — LEADERBOARD PLAYER CARD: Profile Popup
+----------------------------------------------------------------
+Category: UI — popup modal on leaderboard row click
+Files:    src/components/Leaderboard/PlayerCardModal.tsx  (new)
+          src/components/Leaderboard/PlayerCardModal.css  (new)
+          src/components/Leaderboard/LeaderboardPage.tsx  (wire click)
+          src/components/Leaderboard/LeaderboardPage.css  (row cursor)
+
+What it looks like:
+  Click any row on the leaderboard → dark glassmorphic popup appears
+  Layout (top to bottom):
+    ┌─────────────────────────────────────────┐
+    │  [Country Flag]  Full Name              │
+    │                  Job Title              │
+    │                  🌍 Country             │
+    │─────────────────────────────────────────│
+    │  Total Points:        142 pts  🥇        │
+    │  Exact Score Hits:    3                  │
+    │  Leading Scorer Hits: 1                  │
+    │  Predictions Made:    28 / 40            │
+    │─────────────────────────────────────────│
+    │  [ 🔗 View HiBob Profile → ]            │
+    │─────────────────────────────────────────│
+    │  Recent Predictions (last 5)            │
+    │  · Brazil vs France — winner ✅ score ❌ │
+    │  · Germany vs Spain — winner ✅ score ✅  │
+    └─────────────────────────────────────────┘
+    [                 Close                   ]
+
+Details:
+  - Country flag: uses flagcdn.com with the user's country ISO code
+    (we maintain a country-name → ISO-2 map internally)
+  - HiBob link: opens in new tab (_blank), shown only if URL is set
+  - Recent predictions: last 5 predictions with result outcomes
+    coloured green (hit) / red (miss)
+  - If no HiBob URL is set, the link section is hidden
+  - If no job title, shows "RADCOM Employee"
+  - Closing the card returns to the leaderboard with no state reset
+  - The card is read-only for regular users; admin sees an
+    "Edit Profile" icon that opens the edit fields inline
+
+HiBob URL handling (confirmed format):
+  Pattern: https://app.hibob.com/employee-profile/{numericId}
+  - Stored as full URL in the User model
+  - Validated with regex ^https://app\.hibob\.com/employee-profile/\d+$
+  - Displayed in the card as: "🔗 View HiBob Profile →"
+  - Opens in new tab with rel="noopener noreferrer" (security)
+  - If URL fails validation or is blank, link is simply not shown
+
+Security note:
+  URL is allow-listed to hibob.com domain only via regex validation
+  at registration + a runtime href-guard before rendering the link.
+  This prevents open redirect attacks.
+
+Assets needed:
+  [I BUILD]     PlayerCardModal component + styles
+  [I BUILD]     Country → ISO-2 code map for flag lookup
+  [YOU PROVIDE] Full country list when we reach Phase O
+
+----------------------------------------------------------------
+RECOMMENDED EXECUTION ORDER (UPDATED)
+----------------------------------------------------------------
+A  →  B  →  C  →  F  →  E  →  D  →  G  →  H
+then (as you collect resources):
+I  →  J  →  K
+then (for live real-world results):
+L  →  M  →  N (optional)
+then (for RADCOM company identity):
+O  →  P
+
+Phases O+P are tightly coupled — do them together.
+O must come before P (P reads the new User fields added in O).
+
+Before starting O, confirm:
+  1. The full list of RADCOM office countries
+  2. The HiBob profile URL format (e.g. https://app.hibob.com/people/12345)
+
+================================================================

@@ -36,6 +36,7 @@ export function MatchPredictionModal({ matchId, onClose }: MatchPredictionModalP
   const [scoreB, setScoreB] = useState(existing?.predictedScore.teamB ?? 0);
   const [leadingScorer, setLeadingScorer] = useState(existing?.predictedLeadingScorer ?? '');
   const [error, setError] = useState('');
+  const [saved, setSaved] = useState(false);
 
   if (!match) return null;
 
@@ -69,12 +70,14 @@ export function MatchPredictionModal({ matchId, onClose }: MatchPredictionModalP
     };
 
     setPrediction(prediction);
-    onClose();
+    setSaved(true);
+    setTimeout(onClose, 700); // short celebrate delay then close
   }
 
   return (
     <Modal title={title} onClose={onClose}>
-      <form className="modal-form" onSubmit={handleSubmit}>
+      {saved && <div className="confetti-burst" aria-hidden="true">{Array.from({length:12}).map((_,i) => <span key={i} className="confetti-piece" style={{'--i': i} as React.CSSProperties} />)}</div>}
+      <form className={`modal-form${saved ? ' form--saved' : ''}`} onSubmit={handleSubmit}>
 
         {/* Winner picker */}
         <fieldset className="modal-fieldset" disabled={locked}>
@@ -121,7 +124,13 @@ export function MatchPredictionModal({ matchId, onClose }: MatchPredictionModalP
 
         {/* Leading scorer */}
         <fieldset className="modal-fieldset" disabled={locked}>
-          <legend className="modal-legend">Predicted Leading Scorer</legend>
+          <legend className="modal-legend">
+            {/* Boot/cleat icon */}
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style={{marginRight:'5px',verticalAlign:'middle',flexShrink:0}}>
+              <path d="M20.5 15H17v-4.5A1.5 1.5 0 0015.5 9H9V6.5A.5.5 0 008.5 6h-3A.5.5 0 005 6.5v11a.5.5 0 00.5.5h15a.5.5 0 00.5-.5V16a1 1 0 00-1-1z"/>
+            </svg>
+            Predicted Leading Scorer
+          </legend>
           <input
             className="modal-text-input"
             type="text"

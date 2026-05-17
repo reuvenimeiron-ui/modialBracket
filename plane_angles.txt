@@ -1,0 +1,3 @@
+﻿airplane.png  =>  angle=-4.82  css=rotate(4.82deg)
+airplane-(2).png  =>  angle=6.68  css=rotate(-6.68deg)
+take-off.png  =>  angle=-7.08  css=rotate(7.08deg)

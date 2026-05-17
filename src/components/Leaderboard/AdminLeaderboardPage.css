@@ -1,0 +1,147 @@
+/* AdminLeaderboardPage — full-screen display board, no scroll */
+
+/* Override Home's flex-column to lock the page to the viewport */
+.home.alb-screen {
+  height: calc(100vh - 60px);  /* subtract sticky header */
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* Lighten the dark overlay so stadium + planes show through */
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      rgba(10, 45, 15, 0.09) 0px,
+      rgba(10, 45, 15, 0.09) 56px,
+      rgba(5,  22,  8, 0.05) 56px,
+      rgba(5,  22,  8, 0.05) 112px
+    ),
+    linear-gradient(rgba(4, 9, 20, 0.18), rgba(4, 9, 20, 0.18)),
+    url('/grass%20soccer%20field%20close%20up.webp');
+}
+
+/* Compact title row: WC logo stays large, text shrinks */
+.alb-screen .home__intro {
+  padding: 10px 24px 8px;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.alb-screen .home__intro-title-row {
+  gap: 12px;
+}
+
+.alb-screen .home__intro-wc-logo {
+  height: 80px;   /* keep it prominent */
+}
+
+.alb-screen .home__intro-title {
+  font-size: clamp(1.4rem, 3.5vw, 2.4rem);  /* much smaller than Home */
+  letter-spacing: 0.06em;
+}
+
+/* Fix RADCOM logo wrap — use fixed px so it doesn't distort at smaller title size */
+.alb-screen .home__intro-radcom-logo-wrap {
+  height: 28px;
+  width: 172px;
+}
+
+/* Panel fills all remaining vertical space */
+.alb__panel {
+  position: relative;
+  z-index: 2;
+  width: min(1000px, 96vw);
+  flex: 1;
+  min-height: 0;
+  margin: 0 auto 12px;
+  padding: 14px 24px 16px;
+  background: transparent;
+  border-radius: var(--radius-xl);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Dark background only on table header + rows */
+.alb-screen .table thead tr {
+  background: rgba(4, 9, 20, 0.75);
+}
+
+.alb-screen .table tbody tr {
+  background: rgba(4, 9, 20, 0.60);
+}
+
+.alb-screen .table tbody tr:hover {
+  background: rgba(4, 9, 20, 0.80);
+}
+
+/* White text on all table cells for maximum legibility */
+.alb-screen .table th,
+.alb-screen .table td {
+  color: #ffffff;
+}
+
+/* White text on podium cards */
+.alb-screen .lb-podium-card__name,
+.alb-screen .lb-podium-card__pts,
+.alb-screen .lb-podium-card__pts-label {
+  color: #ffffff;
+  -webkit-text-fill-color: #ffffff;
+}
+
+.alb__heading {
+  flex-shrink: 0;
+  margin: 0 0 10px;
+  font-size: 1.1rem;
+  font-family: var(--heading);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-align: center;
+  background: linear-gradient(90deg, var(--accent), var(--gold), var(--accent-hover), var(--purple), var(--accent));
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: title-gradient-shift 5s ease infinite;
+}
+
+/* Podium: compact for display screen */
+.alb-screen .lb-page__podium {
+  gap: 8px;
+  margin-bottom: 10px;
+  flex-shrink: 0;
+}
+
+.alb-screen .lb-podium-card {
+  padding: 8px 10px;
+  min-width: 100px;
+}
+
+.alb-screen .lb-podium-card--1 {
+  min-height: 100px;
+}
+
+.alb-screen .lb-podium-card--2,
+.alb-screen .lb-podium-card--3 {
+  min-height: 80px;
+}
+
+/* Table scrolls inside the panel if needed */
+.alb-screen .alb__table-wrap {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+/* Compact table rows */
+.alb-screen .table th,
+.alb-screen .table td {
+  padding: 6px 10px;
+  font-size: 0.82rem;
+}
+
+.alb__empty {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 32px 0;
+}

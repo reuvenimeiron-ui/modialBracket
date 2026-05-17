@@ -23,10 +23,10 @@ PHASE STATUS
 [x] Phase 6  — Auth Modals
 [x] Phase 7  — Bracket UI
 [x] Phase 8  — Match Modals
-[ ] Phase 9  — Leaderboard & Scoring Rules
-[ ] Phase 10 — Match Auto-Lock
-[ ] Phase 11 — Seed Data & Integration
-[ ] Phase 12 — Verification
+[x] Phase 9  — Leaderboard & Scoring Rules
+[x] Phase 10 — Match Auto-Lock
+[x] Phase 11 — Seed Data & Integration
+[x] Phase 12 — Verification
 
 
 
@@ -43,7 +43,23 @@ After EACH phase, execution MUST stop and the agent MUST:
 - Wait for explicit approval before proceeding.
 
 Progress without verification is NOT allowed.
+--------------------------------------------------
+MANDATORY BRAND COMPLIANCE CHECK (every phase)
+--------------------------------------------------
+Before marking any phase PASS, the agent MUST verify:
 
+[ ] Colors: All new/changed UI elements use ONLY RADCOM brand tokens
+    --accent #36B2C6 | --accent-hover #91D7EB | --purple #872D91
+    --gold #BF76B1 | --green #36b98e | --red #d95f2a | --amber #e9a123
+    No hardcoded hex values in component CSS — use CSS variables only.
+
+[ ] Typography: Titles use Montserrat (var(--heading), font-weight 700)
+                Body text uses Roboto (var(--sans), font-weight 400/700)
+                No use of Bebas Neue, Rajdhani, or other non-brand fonts.
+
+[ ] Google Fonts: index.html imports Montserrat + Roboto (not Bebas/Rajdhani).
+
+Failure on any brand check = FAIL for the phase. Do not proceed.
 
 
 ==================================================
